@@ -1,9 +1,9 @@
-# mdpi-liver
+## mdpi-liver
 This code accompanies our paper "Modeling competitive dynamics of healthy and cancerous liver cells with YAP hyperactivation."
 
 - - - 
 
-Description of files:
+# Description of files:
 
 genFig1_7.m - this file generates Figures 1-7 from the paper (including all of their subfigures).
 
