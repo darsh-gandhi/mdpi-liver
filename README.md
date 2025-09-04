@@ -17,7 +17,7 @@ liverFunctional.m - this is calld by the "runner.m" file during the data-fitting
 
 parameter_control.m - this file contains parameter values used in many simulations when generating figures.
 
-dimensional_odes.m - this file describes Model 5 in our paper, used for finding parameter estimates when fitting to cancer data presented by Anton et al.
+dimensional_odes.m - this file describes Model 5 in our paper, used for finding parameter estimates when fitting to cancer data presented by Anton *et al.*
 
 odes_after_fitting.m - this file describes the ode system (Model 3) we developed in our paper and includes a third equation tracking the total volume of the liver (*d(L+C)/dt*).
 
