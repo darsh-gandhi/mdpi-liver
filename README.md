@@ -19,7 +19,7 @@ parameter_control.m - this file contains parameter values used in many simulatio
 
 dimensional_odes.m - this file describes Model 5 in our paper, used for finding parameter estimates when fitting to cancer data presented by Anton et al.
 
-odes_after_fitting.m - this file describes the ode system we developed in our paper and includes a third equation tracking the total volume of the liver (d(L+C)/dt).
+odes_after_fitting.m - this file describes the ode system we developed in our paper and includes a third equation tracking the total volume of the liver (*d(L+C)/dt*).
 
 twoD_odes.m - this file describes the ode system (Model 3) developed in our paper.
 
