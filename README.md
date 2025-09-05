@@ -1,4 +1,4 @@
-# mdpi-liver
+# mdpi-liver [![DOI](https://zenodo.org/badge/1045991176.svg)](https://doi.org/10.5281/zenodo.17064464)
 This code accompanies our paper "Modeling competitive dynamics of healthy and cancerous liver cells with YAP hyperactivation."
 
 - - - 
