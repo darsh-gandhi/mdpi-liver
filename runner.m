@@ -18,8 +18,8 @@ dataChoice = input('Which dataset are you using?\n (0) Liver only (1) Tumor (Ant
 if dataChoice == 0 %fitting lambda_l only (k_l = 1)
     timespan = 0:2:12; %(days)
     timespan = timespan/7; %(weeks)
-    data = [0.33 0.41 0.54 0.726 0.995 1.105 1]*1500; % mm^3
-    error_bars = [0	0.02 0.02 0.026 0.05 0.105 0.09]*1500; % mm^3
+    data = 1500*[0.33 0.41 0.54 0.726 0.995 1.105 1]*1500; % mm^3
+    error_bars = 1500*[0	0.02 0.02 0.026 0.05 0.105 0.09]*1500; % mm^3
     l_0 = data(1);
     c_0 = 0;
     % ub(2)=0; %lambda_c = 0
@@ -35,7 +35,7 @@ elseif dataChoice == 1 % fitting lambda_c, gamma_l
     data = 1000*[3.3/1000 0.2356114635 0.2520757125 0.5022632175 0.9649201295 2.011033185 3.435962131]; % mm^3
     l_0 = 1500; % inital liver population
     c_0 = data(1); % inital liver population
-    lb(1)=2.16918177423846;ub(1)=2.16918177423846; % known (estimated) lambda_l values (wks)
+    lb(1)=2.365843564264;ub(1)=2.365843564264; % known (estimated) lambda_l values (wks)
     lb(5:7)=0;ub(5:7)=0; % not fitting gamma_c or nu
 end
 
@@ -51,7 +51,7 @@ set(gca,'FontSize',14)
 init=[l_0, c_0, l_0+c_0]; % initial conditions
 
 n=15;        %trials of the multistart
-runs=100;  %runs of fmincon per multistart trial
+runs=50;  %runs of fmincon per multistart trial
 paramsAndOmega=-1.0*ones(n,length(lb)+1); % matrix containing "best" parameter values for each trial of Multistart, relative l2 error, and the omega value 
 
 % paramsAndOmega(:,end) = 10.^randi([-3 4],1,n); % makes omega (data-fitting weight) value random 10^k, where k is an integer between -3 and 4
@@ -65,7 +65,7 @@ for i=0:n-1 % n trials
     i+1 % trial number
     %the next line runs the multistart and saves the parameter outputs and error to the paramsAndOmega matrix
     [paramsAndOmega(i+1,1), paramsAndOmega(i+1,2), paramsAndOmega(i+1,3), paramsAndOmega(i+1,4), paramsAndOmega(i+1,5), paramsAndOmega(i+1,6), paramsAndOmega(i+1,7), paramsAndOmega(i+1,8)] = liver_MultiStart(data,init,timespan,lb,ub,w,alpha,runs(mod(i,length(runs))+1),dataChoice);
-    paramsAndOmega(i+1,5)=log(2)/(3*paramsAndOmega(i+1,2));
+    paramsAndOmega(i+1,5)=5*log(2)/(3*paramsAndOmega(i+1,2));
 end
 eval_time = cputime-inittime; % total time of trials
 
@@ -97,7 +97,7 @@ if dataChoice == 0
     ylabel('Fraction of Original Liver')
     legend('Simulated', 'Observed',Location='northwest')
     hold off
-    ylim([0 1.25])
+    ylim(1500*[0 1.25])
 end
 set(gca,'FontSize',14)
 
