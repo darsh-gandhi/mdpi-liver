@@ -20,10 +20,10 @@ function [lL,lC,kL,kC,gL,gC,nu,l0,c0,t0,tf,Nt,t,dt] = parameter_control()
 
 %params from data-fitting (new)
 lL = 2.16918177423846;
-lC = 1.620612057098;
+lC = 1.80545133635960;
 kL=1500;
 kC=7500;
-gL=0.142569012229;
+gL=0.639865100580673;
 gC=0;
 nu = 0;
 

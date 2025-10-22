@@ -4,20 +4,20 @@ clear; close all
 
 % Parameter Values
 lambdaL = 2.16918177423846;
-lambdaC = 1.620612057098;
-gammaL = 0.142569012229;
-gammaC = 7.1;
-Kl = 1500;
-Kc = 7500;
-mu=0;
+lambdaC = 1.80545133635960;
+Kl=1500;
+Kc=7500;
+gammaL=0.639865100580;
+gammaC=5;
+mu = 0;
 
 colors = 1/255*[0 0 255; 255 0 0]; % blue red, vector for colors/shading
 
 % Initialize vector for graphing
-n = 500; % Number of steps
+n = 5000; % Number of steps
 Y = linspace(0, 1, n).';
 Z = zeros(n, n);
-tspan = linspace(0,50000,10001); % timespan of simulations
+tspan = linspace(0,5000,1001); % timespan of simulations
 row_index = 1;
 
 %% validation from qual. analysis
@@ -28,7 +28,8 @@ C_crit = lambdaC*(1-Kl/(gammaC*Kc));
 
 if L_crit < C_crit
     fprintf('expecting unstable COE\n')
-    X = linspace(L_crit, C_crit, n).';
+    % X = linspace(L_crit, C_crit, n).';
+    X = linspace(0, lambdaC, n).';
 else
     fprintf('expecting stable COE\n')
     X = linspace(C_crit, L_crit, n).';
@@ -45,15 +46,17 @@ z = [lambdaL, lambdaC, gammaL, gammaC, Kl, Kc, mu];
 % Y <- cancer percent
 % Z <- C(t_f)
 
+% system('caffeinate')
+
 for i = 1:n
     i
     nu = X(i);
-    z(7) = nu;
+    z(7) = nu/lambdaC;
 
     for j = 1:n
         C_percent = Y(j);
-        initialvalues = ((2/3)*Kl).*[(1-C_percent), C_percent];
-        [t, y] = ode45(@(t, y) twoD_odes(t, y, z), tspan, initialvalues);
+        initialvalues = ((1/3)*Kl).*[(1-C_percent), C_percent];
+        [t, y] = ode15s(@(t, y) twoD_odes(t, y, z), tspan, initialvalues);
 
         Z(j, i) = y(end,2);
         end_behavior(row_index, :) = [nu, C_percent, y(end,2), y(end, 1)];
@@ -61,11 +64,15 @@ for i = 1:n
     end
 end
 
+% system('killall caffeinate')
 %% generate fig 8
 
 figure(1)
 surf(X, Y, Z)
 colormap(colors)
+% colorbar
+clim([0 1])
+% colormap(colors)
 hold on
 shading interp
 

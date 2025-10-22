@@ -454,7 +454,7 @@ if dataChoice == 0 %fitting lambda_l only (k_l = 1)
 elseif dataChoice == 1 % fitting lambda_c, gamma_l
     timespan = [0 3 17 21 24 28 31]; % timespan of the experiment (days)
     timespan = timespan/7; % convert to weeks
-    data = 1000*[3.3/1000 0.2356114635 0.2520757125 0.5022632175 0.9649201295 2.011033185 3.435962131]; % raw data with conversion from cm^3 to mm^3
+    data = 1000*[3.3/1000 0.2356114635 0.2520757125 0.5022632175 0.9649201295 2.011033185 3.435962131]; % mm^3
     l0 = 1500; % inital liver population
     c0 = data(1); % inital liver population
 end
@@ -478,14 +478,14 @@ fig_index = fig_index + 1;
 
 % parameter/IC values from data-fitting
 lL = 2.16918177423846;
-lC = 1.620612057098;
+lC = 1.80545101338815;
 kL=1500;
 kC=7500;
-gL=0.142569012229;
+gL=0.639865215044126;
 gC=0;
 nu = 0;
 params = [lL,lC,kL,kC,gL,gC,nu];
-init = [l0 c0 l0+c0];
+init = [1500 3.3 1503.3];
 fineMesh = linspace(0,timespan(end),1001); % Time grid
 
 colors = 1/255*[0 0 255; 255 0 0; 160 32 240]; % blue red purple
@@ -545,9 +545,12 @@ init = [l0 c0 l0+c0];
 colors = 1/255*[0 0 255; 255 0 0; 160 32 240]; % blue red purple
 mylinestyles = ["-"; "--"; "-.";":"]; % linestyles for figs 5 and 6
 
+L_crit = (1-(gL*kL)/kC)
+
 %% generating figs 5 (a) and (b)
 
-varying_gammaC = [gL 1.25 5 10];
+% varying_gammaC = [gL 1.25 5 10];
+varying_gammaC = [0.1 gL 1.25 5];
 
 for i = 1:length(varying_gammaC)
     params(6) = varying_gammaC(i);
@@ -584,8 +587,11 @@ fig_index = fig_index + 2;
 
 clear t2 y2
 
-params(6) = 2.5; % value of gammaC
+params(6) = 1.5; % value of gammaC
 varying_mu = [0.1 0.6 0.85 0.975]; % desired values of mu that we are varying
+C_crit = (1-Kl/(params(6)*Kc))
+
+% fineMesh2 = linspace(0,4*fineMesh(end),1001);
 
 for i = 1:length(varying_mu)
     params(7) = varying_mu(i)*lC; % converting mu to value of nu for the ode solver
@@ -623,8 +629,9 @@ fig_index = fig_index + 2;
 
 clear t2 y2
 
-params(6) = 7.1; % value of gammaC
+params(6) = 5; % value of gammaC
 varying_mu = [0.1 0.6 0.85 0.975]; % desired values of mu that we are varying
+C_crit = (1-Kl/(params(6)*Kc))
 
 for i = 1:length(varying_mu)
     params(7) = varying_mu(i)*lC; % converting mu to value of nu for the ode solver    
@@ -660,36 +667,41 @@ fig_index = fig_index + 2;
 
 %% generating figure 7(a)
 
-params(6) = 2.5; % value of gamma_c
-params(7) = 0.95*lC; % value of mu
+fig_index=1;
+
+fineMesh2=linspace(0,fineMesh(end)*2,1001);
+% fineMesh2=fineMesh;
+
+params(6) = 1.5; % value of gamma_c
+params(7) = 0.875*lC; % value of mu
 % fineMesh = linspace(0,25,1001);
-[~,y2] = ode23s(@(t,y) odes_after_fitting(t,y,params), fineMesh, init);
+[~,y2] = ode23s(@(t,y) odes_after_fitting(t,y,params), fineMesh2, init);
 
 figure(fig_index)
-plot(fineMesh, y2(:,1),'Color',colors(1,:),'LineWidth',2)
+plot(fineMesh2, y2(:,1),'Color',colors(1,:),'LineWidth',2)
 hold on
-plot(fineMesh, y2(:,2),'Color',colors(2,:),'LineWidth',2)
-legend('Healthy','Cancer')
-xlim([0 fineMesh(end)])
+plot(fineMesh2, y2(:,2),'Color',colors(2,:),'LineWidth',2)
+legend('Healthy','Cancer',Location='east')
+xlim([0 fineMesh2(end)])
 xlabel('Time (weeks)')
 ylabel('Volume (mm^3)')
 set(gca,'FontSize',14)
 ylim([-50 1550])
 fig_index = fig_index + 1;
 
-%% generating figure 7(b)
+% %% generating figure 7(b)
 
-params(6) = 7.1; % value of gamma_c
-params(7) = 0.95*lC; % value of mu
+params(6) = 2.5; % value of gamma_c
+% params(7) = 0.9*lC; % value of mu
 % fineMesh = linspace(0,25,1001);
-[~,y2] = ode23s(@(t,y) odes_after_fitting(t,y,params), fineMesh, init);
+[~,y2] = ode23s(@(t,y) odes_after_fitting(t,y,params), fineMesh2, init);
 
 figure(fig_index)
-plot(fineMesh, y2(:,1),'Color',colors(1,:),'LineWidth',2)
+plot(fineMesh2, y2(:,1),'Color',colors(1,:),'LineWidth',2)
 hold on
-plot(fineMesh, y2(:,2),'Color',colors(2,:),'LineWidth',2)
+plot(fineMesh2, y2(:,2),'Color',colors(2,:),'LineWidth',2)
 legend('Healthy','Cancer')
-xlim([0 fineMesh(end)])
+xlim([0 fineMesh2(end)])
 xlabel('Time (weeks)')
 ylabel('Volume (mm^3)')
 set(gca,'FontSize',14)
