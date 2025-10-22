@@ -4,7 +4,7 @@ function dydt = twoD_odes(t, y, z)
 %       t <- time (weeks)
 %       y <- state vars (mm^3)
 %       z <- parameters (depends on parameter)
-%           z = [(1) lambda_l, (2) lambda_c, (3) k_l, (4) k_c, (5) gamma_l, (6) gamma_c, (7) mu]
+%           z = [(1) lambda_l, (2) lambda_c, (3) gamma_l, (4) gamma_c, (5) k_l, (6) k_c, (7) mu]
 %   Outputs:
 %       dydt <- output of ode (mm^3/weeks)
 
